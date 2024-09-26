@@ -1,59 +1,62 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'flyway'
-            defaultContainer 'jnlp'
-            yaml """
-            apiVersion: v1
-            kind: Pod
-            spec:
-              containers:
-                - name: flyway
-                  image: flyway/flyway:latest
-                  command: ['cat']
-                  tty: true
-            """
-        }
-    }
+    agent any
+
     environment {
-        SNOWFLAKE_ACCOUNT = credentials('snowflake_account')
-        SNOWFLAKE_USER = credentials('snowflake_user')
-        SNOWFLAKE_PASSWORD = credentials('snowflake_password')
-        SNOWFLAKE_DATABASE = 'your_database'
-        SNOWFLAKE_SCHEMA = 'your_schema'
+        // Environment variables for Snowflake connection
+        SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
+        SNOWFLAKE_USER = credentials('snowflake-user') // Username
+        SNOWFLAKE_PASSWORD = credentials('snowflake-password') // Password
+        FLYWAY_VERSION = '9.0.0' // Specify the Flyway version
     }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // Checkout your repository
+                git 'https://github.com/your-repo/snowflake-migrations.git'
             }
         }
+
+        stage('Install Flyway') {
+            steps {
+                script {
+                    // Download and install Flyway
+                    sh "curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.zip -o flyway.zip"
+                    sh "unzip flyway.zip && mv flyway-${FLYWAY_VERSION} flyway"
+                }
+            }
+        }
+
         stage('Run Migrations') {
             steps {
-                container('flyway') {
-                    script {
-                        // Configure Flyway to connect to Snowflake
-                        sh """
-                        flyway -url=jdbc:snowflake://${SNOWFLAKE_ACCOUNT}/${SNOWFLAKE_DATABASE}/${SNOWFLAKE_SCHEMA}
-                        -user=${SNOWFLAKE_USER} -password=${SNOWFLAKE_PASSWORD} migrate
-                        """
-                    }
+                script {
+                    // Set Flyway configuration
+                    sh """
+                    ./flyway/flyway -url=${SNOWFLAKE_URL} \
+                                    -user=${SNOWFLAKE_USER} \
+                                    -password=${SNOWFLAKE_PASSWORD} \
+                                    migrate
+                    """
+                }
+            }
+        }
+
+        stage('Test Migrations') {
+            steps {
+                script {
+                    // Run any tests or validations needed after migration
+                    sh "./flyway/flyway -url=${SNOWFLAKE_URL} -user=${SNOWFLAKE_USER} -password=${SNOWFLAKE_PASSWORD} info"
                 }
             }
         }
     }
+
     post {
-        always {
-            script {
-                // Clean up or notify
-                echo 'Pipeline finished.'
-            }
-        }
         success {
             echo 'Migrations completed successfully!'
         }
         failure {
-            echo 'Migrations failed.'
+            echo 'Migrations failed!'
         }
     }
 }
