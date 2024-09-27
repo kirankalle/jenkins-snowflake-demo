@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your repository
-                git 'https://github.com/your-repo/snowflake-migrations.git'
+                git 'https://github.com/kirankalle/jenkins-snowflake-demo.git'
             }
         }
 
