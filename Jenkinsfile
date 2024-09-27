@@ -4,8 +4,8 @@ pipeline {
     environment {
         // Environment variables for Snowflake connection
         SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
-        SNOWFLAKE_USER = credentials('snowflake-user') // Username
-        SNOWFLAKE_PASSWORD = credentials('snowflake-password') // Password
+        SNOWFLAKE_USER = credentials('snowflake-credentials').username // Username
+        SNOWFLAKE_PASSWORD = credentials('snowflake-credentials').password // Password
         FLYWAY_VERSION = '9.0.0' // Specify the Flyway version
     }
 
