@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         // Environment variables for Snowflake connection
         SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
