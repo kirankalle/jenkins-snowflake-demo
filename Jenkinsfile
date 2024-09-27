@@ -6,7 +6,7 @@ pipeline {
         SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
         SNOWFLAKE_USER = credentials('snowflake-credentials').username // Username
         SNOWFLAKE_PASSWORD = credentials('snowflake-credentials').password // Password
-        FLYWAY_VERSION = '9.0.0' // Specify the Flyway version
+        FLYWAY_VERSION = '10.17.3' // Specify the Flyway version
     }
 
     stages {
