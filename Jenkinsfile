@@ -20,8 +20,8 @@ pipeline {
             steps {
                 script {
                     // Download and install Flyway
-                    sh "curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.zip -o flyway.zip"
-                    sh "unzip flyway.zip && mv flyway-${FLYWAY_VERSION} flyway"
+                    sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.17.3/flyway-commandline-10.17.3-linux-x64.tar.gz | tar xvz"
+                    sh "sudo ln -s `pwd`/flyway-10.17.3/flyway /usr/local/bin/flyway"
                 }
             }
         }
