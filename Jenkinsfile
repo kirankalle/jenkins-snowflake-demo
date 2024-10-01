@@ -30,14 +30,20 @@ pipeline {
         stage('Run Flyway Migrations') {
             steps {
                 script {
+                    // Use withCredentials to handle secrets securely
                     withCredentials([usernamePassword(credentialsId: 'snowflake-credentials', usernameVariable: 'SNOWFLAKE_USER', passwordVariable: 'SNOWFLAKE_PASSWORD')]) {
-                        
-                        sh """
-                        ./flyway/flyway -url='jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN'
-                                        -user='\$SNOWFLAKE_USER' \
-                                        -password='\$SNOWFLAKE_PASSWORD' \
-                                        -locations=filesystem:sql migrate
+                        // Construct the Flyway command
+                        def flywayCommand = """
+                        ./flyway/flyway \
+                        -url='jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB' \
+                        -user='${SNOWFLAKE_USER}' \
+                        -password='${SNOWFLAKE_PASSWORD}' \
+                        -locations=filesystem:sql \
+                        migrate
                         """
+
+                        // Run the Flyway migrations
+                        sh "${flywayCommand}"
                     }
                 }
             }
