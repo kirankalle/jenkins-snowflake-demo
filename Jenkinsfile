@@ -5,8 +5,6 @@ pipeline {
         SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
         SNOWFLAKE_USER = credentials('snowflake-username') // Username
         SNOWFLAKE_PASSWORD = credentials('snowflake-password') // Password
-        FLYWAY_URL = "jdbc:snowflake://$SNOWFLAKE_URL.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN"
-        FLYWAY_LOCATION = "filesystem:sql migrate"
         FLYWAY_VERSION = '10.17.3' // Specify the Flyway version
     }
 
@@ -22,8 +20,8 @@ pipeline {
             steps {
                 script {
                     // Download and install Flyway
-                    sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.17.3/flyway-commandline-10.17.3-linux-x64.tar.gz | tar xvz"
-                    sh "sudo ln -s `pwd`/flyway-10.17.3/flyway /usr/local/bin/flyway"
+                    sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz | tar xvz
+                    sh "mv flyway-${FLYWAY_VERSION} flyway"
                 }
             }
         }
@@ -33,11 +31,10 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'snowflake-credentials', usernameVariable: 'SNOWFLAKE_USER', passwordVariable: 'SNOWFLAKE_PASSWORD')]) {
                         sh """
-                        flyway -url=$FLYWAY_URL \
-                        -user=$SNOWFLAKE_USER \
-                        -password=$SNOWFLAKE_PASSWORD \
-                        -locations=$FLYWAY_LOCATION \
-                        migrate
+                        ./flyway/flyway -url=jdbc:snowflake://${SNOWFLAKE_ACCOUNT}/
+                                        -user=$SNOWFLAKE_USER
+                                        -password=$SNOWFLAKE_PASSWORD
+                                        -locations=filesystem:sql migrate
                         """
                     }
                 }
