@@ -28,7 +28,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Run Flyway Migrations') {
             steps {
                 script {
@@ -44,7 +43,6 @@ pipeline {
                 }
             }
         }
-    }
 
         stage('Test Migrations') {
             steps {
