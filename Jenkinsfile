@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // Download and install Flyway
-                    sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz | tar xvz
+                    sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz | tar xvz"
                     sh "mv flyway-${FLYWAY_VERSION} flyway"
                 }
             }
