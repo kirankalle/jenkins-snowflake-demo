@@ -12,7 +12,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your repository
-                git 'https://github.com/kirankalle/jenkins-snowflake-demo.git'
+                git branch: 'main', url: 'https://github.com/kirankalle/jenkins-snowflake-demo.git'
+                #git 'https://github.com/kirankalle/jenkins-snowflake-demo.git'
             }
         }
 
