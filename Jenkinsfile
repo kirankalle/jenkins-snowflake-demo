@@ -33,9 +33,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'snowflake-credentials', usernameVariable: 'SNOWFLAKE_USER', passwordVariable: 'SNOWFLAKE_PASSWORD')]) {
                         
                         sh """
-                        ./flyway/flyway -url=jdbc:snowflake://${SNOWFLAKE_URL}/
-                                        -user=$SNOWFLAKE_USER
-                                        -password=$SNOWFLAKE_PASSWORD
+                        ./flyway/flyway -url='jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN'
+                                        -user='\$SNOWFLAKE_USER' \
+                                        -password='\$SNOWFLAKE_PASSWORD' \
                                         -locations=filesystem:sql migrate
                         """
                     }
