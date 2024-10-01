@@ -30,12 +30,14 @@ pipeline {
             steps {
                 script {
                     // Set Flyway configuration
-                    sh """
-                    ./flyway/flyway -url=gvb61328.us-east-1 \
-                                    -user=mkvkiran \
-                                    -password=Kirankumar@96 \
-                                    migrate
-                    """
+                    environment {
+                        FLYWAY_URL: jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN
+                        FLYWAY_USER: mkvkiran
+                        FLYWAY_PASSWORD: Kirankumar@96
+                        FLYWAY_SCHEMAS: JAR_SCHEMA
+                        JAVA_TOOL_OPTIONS: --add-opens=java.base/java.nio=ALL-UNNAMED
+                    }
+                    sh "flyway -locations=filesystem:sql migrate"
                 }
             }
         }
