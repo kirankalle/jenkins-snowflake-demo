@@ -5,6 +5,8 @@ pipeline {
         SNOWFLAKE_URL = credentials('snowflake-url')  // Snowflake account URL
         SNOWFLAKE_USER = credentials('snowflake-username') // Username
         SNOWFLAKE_PASSWORD = credentials('snowflake-password') // Password
+        FLYWAY_URL = "jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN"
+        FLYWAY_LOCATION = "filesystem:sql migrate"
         FLYWAY_VERSION = '10.17.3' // Specify the Flyway version
     }
 
@@ -29,15 +31,14 @@ pipeline {
         stage('Run Migrations') {
             steps {
                 script {
-                    // Set Flyway configuration
-                    environment {
-                        FLYWAY_URL: jdbc:snowflake://gvb61328.us-east-1.snowflakecomputing.com/?db=JAR_DB&warehouse=CICD_DEMO&role=ACCOUNTADMIN
-                        FLYWAY_USER: mkvkiran
-                        FLYWAY_PASSWORD: Kirankumar@96
-                        FLYWAY_SCHEMAS: JAR_SCHEMA
-                        JAVA_TOOL_OPTIONS: --add-opens=java.base/java.nio=ALL-UNNAMED
-                    }
-                    sh "flyway -locations=filesystem:sql migrate"
+                    // Set Flyway configuration 
+                    sh """
+                    flyway -url=$FLYWAY_URL \
+                    -user=$SNOWFLAKE_USER \
+                    -password=$SNOWFLAKE_PASSWORD \
+                    -locations=$FLYWAY_LOCATION \
+                    migrate
+                    """
                 }
             }
         }
