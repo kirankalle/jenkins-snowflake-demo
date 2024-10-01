@@ -31,9 +31,9 @@ pipeline {
                 script {
                     // Set Flyway configuration
                     sh """
-                    ./flyway/flyway -url=${SNOWFLAKE_URL} \
-                                    -user=${SNOWFLAKE_USER} \
-                                    -password=${SNOWFLAKE_PASSWORD} \
+                    ./flyway/flyway -url=gvb61328.us-east-1 \
+                                    -user=mkvkiran \
+                                    -password=Kirankumar@96 \
                                     migrate
                     """
                 }
