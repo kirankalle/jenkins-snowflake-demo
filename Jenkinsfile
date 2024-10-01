@@ -23,7 +23,7 @@ pipeline {
                 script {
                     // Download and install Flyway
                     sh "wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.17.3/flyway-commandline-10.17.3-linux-x64.tar.gz | tar xvz"
-                    sh "/usr/local/bin `pwd`/flyway-10.17.3/flyway /usr/local/bin/flyway"
+                    sh "ln -s `pwd`/flyway-10.17.3/flyway /usr/local/bin/flyway"
                 }
             }
         }
