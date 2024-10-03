@@ -35,12 +35,12 @@ pipeline {
                         // Construct the Flyway command
                         def flywayCommand = """
                         ./flyway/flyway \
+                        JAVA_OPTS='--add-opens=java.base/java.nio=ALL-UNNAMED' ./flyway/flyway \
                         -url='jdbc:snowflake://lxzizxn-sm83954.snowflakecomputing.com/?db=JENKINS_DB' \
                         -user='${SNOWFLAKE_USER}' \
                         -password='${SNOWFLAKE_PASSWORD}' \
                         -locations=filesystem:sql \
-                        migrate \
-                        --add-opens=java.base/java.nio=ALL-UNNAMED
+                        migrate
                         """
 
                         // Run the Flyway migrations
