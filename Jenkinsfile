@@ -6,6 +6,7 @@ pipeline {
         SNOWFLAKE_USER = credentials('snowflake-username') // Username
         SNOWFLAKE_PASSWORD = credentials('snowflake-password') // Password
         FLYWAY_VERSION = '10.17.3' // Specify the Flyway version
+        JAVA_TOOL_OPTIONS = '--add-opens=java.base/java.nio=ALL-UNNAMED'
     }
 
     stages {
@@ -35,7 +36,6 @@ pipeline {
                         // Construct the Flyway command
                         def flywayCommand = """
                         ./flyway/flyway \
-                        JAVA_OPTS='--add-opens=java.base/java.nio=ALL-UNNAMED' ./flyway/flyway \
                         -url='jdbc:snowflake://lxzizxn-sm83954.snowflakecomputing.com/?db=JENKINS_DB' \
                         -user='${SNOWFLAKE_USER}' \
                         -password='${SNOWFLAKE_PASSWORD}' \
