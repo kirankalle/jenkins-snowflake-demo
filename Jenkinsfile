@@ -36,7 +36,7 @@ pipeline {
                         // Construct the Flyway command
                         def flywayCommand = """
                         ./flyway/flyway \
-                        -url='jdbc:snowflake://ys71636.central-india.azure.snowflakecomputing.com.snowflakecomputing.com/?db=JENKINS_DB' \
+                        -url='jdbc:snowflake://ys71636.central-india.azure.snowflakecomputing.com/?db=JENKINS_DB' \
                         -user='${SNOWFLAKE_USER}' \
                         -password='${SNOWFLAKE_PASSWORD}' \
                         -locations=filesystem:sql \
