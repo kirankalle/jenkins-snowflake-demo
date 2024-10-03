@@ -39,7 +39,8 @@ pipeline {
                         -user='${SNOWFLAKE_USER}' \
                         -password='${SNOWFLAKE_PASSWORD}' \
                         -locations=filesystem:sql \
-                        migrate
+                        migrate \
+                        --add-opens=java.base/java.nio=ALL-UNNAMED
                         """
 
                         // Run the Flyway migrations
