@@ -49,15 +49,24 @@ pipeline {
                 }
             }
         }
-
         stage('Test Migrations') {
             steps {
                 script {
-                    // Run any tests or validations needed after migration
-                    sh "./flyway/flyway -url=${SNOWFLAKE_URL} -user=${SNOWFLAKE_USER} -password=${SNOWFLAKE_PASSWORD} info"
+                    // Define the Flyway info command
+                    def flywayInfoCommand = """
+                    ./flyway/flyway \
+                    -url='${SNOWFLAKE_URL}' \
+                    -user='${SNOWFLAKE_USER}' \
+                    -password='${SNOWFLAKE_PASSWORD}' \
+                    info
+                    """
+
+                    // Execute the Flyway info command
+                    sh "${flywayInfoCommand}"
                 }
             }
         }
+
     }
 
     post {
